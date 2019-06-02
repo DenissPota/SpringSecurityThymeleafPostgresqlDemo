@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark mb-5">
+        <a class="navbar-brand" href="#">Animal Shelter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline mt-2 mt-md-0" th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<main role="main" class="container">
+    <hr>
+        <div class="mt-5" sec:authorize="hasRole('USER')">Text visible to user.</div>
+        <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+        <div sec:authorize="isAuthenticated()">
+            Text visible only to authenticated users.
+        </div>
+        Authenticated username:
+        <div sec:authentication="name"></div>
+        Authenticated user roles:
+        <div sec:authentication="principal.authorities"></div>
+    <hr>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/animals/showFormForAdd}" class="btn btn-primary btn-sm mb-3">Add Animal</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Type</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="animals" type="String"*/-->
+        <tr th:each="tempAnimal: ${animals}">
+            <td th:text="${tempAnimal.name}"/>
+            <td th:text="${tempAnimal.age}"/>
+            <td th:text="${tempAnimal.type}"/>
+            <td>
+                <a th:href="@{/animals/showFormForUpdate(id=${tempAnimal.id})}"
+                   class="btn btn-info btn-sm">Update</a>
+                <a th:href="@{/animals/delete(id=${tempAnimal.id})}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>

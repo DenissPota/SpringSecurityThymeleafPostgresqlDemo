@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="2018-05-03 create initial tables" author="Deniss Potapenko">
+        <createTable tableName="animal">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2018-06-01 user/authorities table" author="Deniss Potapenko">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(256)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="integer">
+            </column>
+        </createTable>
+
+        <createTable tableName="authorities">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(256)">
+                <constraints nullable="false" foreignKeyName="fk_authorities_users"
+                             references="users(username)"/>
+            </column>
+            <column name="authority" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints foreignKeyName="fk_user_authority_user"
+                             references="users(id)"/>
+            </column>
+            <column name="authority_id" type="BIGINT">
+                <constraints foreignKeyName="fk_user_authority_authority"
+                             references="authorities(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
